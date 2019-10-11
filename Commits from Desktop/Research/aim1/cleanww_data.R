@@ -84,10 +84,29 @@ for (pop in 1:length(uni_pop)) {
   #print(paste("file name is",file_name))
   #define file_names as an empty vector
   file_names <- c(file_names,file_name)
+  #write.table(test, file = paste(uni_pop[pop], "new.csv", sep ="_"), sep =",", row.names=FALSE)
+  
+  
+}
+write.csv(file_names,"Original_427_Filenames.csv")
+save(list = character(), file = "Original_427_Filenames.RData")
+######DATA: For the other team D2441 #######
+for (pop in 1:length(uni_pop)) {
+  #print(paste("pop is",pop))
+  pop_lines <- which(world_data$Population == uni_pop[pop])
+  #print(paste("pop lines",pop_lines))
+  test <-spread(world_data[pop_lines,], key=Loci,value=Frequency)  %>% 
+    mutate_at(vars(-Population), funs( ifelse(is.na(.),0,.)))
+  #print(paste("test is",test))
+  file_name <- paste(uni_pop[pop], "new.csv", sep ="_")
+  #print(paste("file name is",file_name))
+  #define file_names as an empty vector
+  file_names <- c(file_names,file_name)
   write.table(test, file = paste(uni_pop[pop], "new.csv", sep ="_"), sep =",", row.names=FALSE)
   
   
 }
+
 
 
     

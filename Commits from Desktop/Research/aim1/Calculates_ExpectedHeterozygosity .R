@@ -19,13 +19,19 @@ loci_vec <- c("CSF1PO","D3S1358","D5S818","D7S820","D8S1179","D13S317","D16S539"
 file_names
 
 
-#intiates the vector that holds all exp heterozygosity values 
+
+
+#intiates the vector that holds all  heterozygosity of each loci  
 exp_hvec <- c()
-exp_hmat <- matrix(data = NA, nrow = length(file_names), ncol = length(loci_vec))
+exp_hmat.loci <- matrix(data = NA, nrow = length(file_names), ncol = length(loci_vec))
 
+#assigns the col name to the matrix from the freq vector (changes)
+colnames(exp_hmat.loci) <- loci_vec
 
+#asigns the row name to the matrix (changes)
+rownames(exp_hmat.loci) <- file_names
 #
-
+pops.out.of.bounds <- c()
 #loop that iterates through the 13 loci in Loci_vec
 for (locus_i in 1:length(loci_vec)){
   current_locus <- loci_vec[locus_i]
@@ -38,77 +44,79 @@ for (locus_i in 1:length(loci_vec)){
    
     
     #loop iterates through colums of file and checks if it matches current loci 
-    for (i in 3:dim(afs_matrix)[2]){
+    for (i in 2:dim(afs_matrix)[2]){
       name =  colnames(afs_matrix)[i]
       
       if(name == current_locus){
         cur_afs <- afs_matrix[,i]
-   
+        
         if (sum(as.numeric(cur_afs)) >= 1.01 || sum(as.numeric(cur_afs))<=.99){
           print(paste("Sum is out of bounds",loci_vec[locus_i],file_names[pop_i],sum(as.numeric(cur_afs))))
+          pops.out.of.bounds <- c(pops.out.of.bounds,file_names[pop_i])
         }
        
         afs_sqrd <- as.numeric(cur_afs)^2
         #loci_sum <- sum(afs_sqrd)
         exp_hetero <- (1 -(sum(afs_sqrd)))
         #where you are putting it/what you are putting in it 
-        exp_hmat[pop_i,locus_i] <- exp_hetero
+        exp_hmat.loci[pop_i,locus_i] <- exp_hetero
         #print(paste("heterozygosity for locus  ",current_locus,"for pop ",j, "is ",exp_hetero))
       }
     }
   }
 }
 
+#these populations dont add up to one so they will be removed 
+pops.tobe.removed <-unique(pops.out.of.bounds)
+for (i in length(file_names):1){
+  if (file_names[i] %in% pops.tobe.removed){
+    file_names = file_names[-i]
+    print(paste(i,"is a match"))
+  }
+  
+}
 
 
 
-#assigns the col name to the matrix from the freq vector (changes)
-colnames(exp_hmat) <- loci_vec
-
-#asigns the row name to the matrix (changes)
-rownames(exp_hmat) <- file_names
-
-write.csv(exp_hmat,"Exp_hetero_wrld.csv")
+write.csv(exp_hmat.loci,"Exp_hetero_wrld.csv")
 
 
 #Calculate average expected heterozygosity for each population 
 
 mean_vec <- c()
 
-for( i in 1:length(exp_hmat)){
-mean_exp <- mean(exp_hmat[i,])
+for( i in 1:length(exp_hmat.loci)){
+mean_exp <- mean(exp_hmat.loci[i,])
 mean_vec <-c(mean_vec,mean_exp)
 }
 
 
 # turns the vector into a matrix 
-exphetero_mat <- as.matrix(mean_vec, ncol=2)
+average_exphetero_mat <- as.matrix(mean_vec, ncol=2)
 
-colnames(exphetero_mat) <- "Average Expected Heterozygosity" 
-colnames(exp)
+colnames(average_exphetero_mat)[1] <- "Average Expected Heterozygosity" 
+
 
 
 #asigns the row name to the matrix (changes)
-rownames(exphetero_mat) <- file_names
+rownames(average_exphetero_mat) <- file_names
 
-write.csv(exphetero_mat,"Average_Expected_Heterowrold.csv")
+
 
 ###### Removing populations without the STR core ############
-colSums(is.na(exphetero_mat))
-sum(is.na(exphetero_mat))
-exphetero_mat_clean <- na.omit(exphetero_mat)
+colSums(is.na(average_exphetero_mat))
+sum(is.na(average_exphetero_mat))
+average.eh.matrix <- na.omit(average_exphetero_mat)
+write.csv(average.eh.matrix,"Average_Expected_Hetero_9.19.csv")
+
+#THESE ARE the populations that we will use for this experiment 
+pops.for.sims <- rownames(average.eh.matrix)
+write.csv(pops.for.sims,"Names of 273 populations for sims")
+
+save(list = character(),file = "Names of 273 populations for sims.RData")
+save(pops.for.sims)
 
 
-count = 0
-for(i in exphetero_mat_clean[,1]){
-  if(i >= i)
-  
-}
 
-########### Plotting Expected hetero vs. Identifier #################
 
-#Read in the CSV and turn it into a dataframe 
-world.db <- read_excel("Wrld_database.xlsx")
-library(ggplot2)
-qplot(x=unique(world.db$Identifier), y = world.db$)
 

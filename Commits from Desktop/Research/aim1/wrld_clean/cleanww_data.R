@@ -82,7 +82,7 @@ for (pop in 1:length(uni_pop)) {
     location <-which(colnames(pop_data_spread)== "vWA")
     colnames(pop_data_spread)[location]<-"VWA"
   }
-  write.table(pop_data_spread[,2:dim(pop_data_spread)[2]], file = file_name, sep =",", row.names=FALSE)
+ # write.table(pop_data_spread[,2:dim(pop_data_spread)[2]], file = file_name, sep =",", row.names=FALSE)
   
   
 }
