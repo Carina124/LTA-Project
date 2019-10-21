@@ -43,9 +43,9 @@ library(readr)
 ###########################
 LR_calculator <- function(file.name, num_contribs, num_sims, is.a.truecontrib){
   
-  # set.seed(657) 
+ 
   # We have to use this particular seed for reproduceability 
-  #set.seed (123560) 
+  set.seed (123560) 
   
   #reads in the files we are working with 
   afs_csv <- read.csv(file.name)   
@@ -77,7 +77,7 @@ LR_calculator <- function(file.name, num_contribs, num_sims, is.a.truecontrib){
     
     #I think this should be <=
     while (j < num_sims){
-      #set.seed (123560) 
+      
       #######simugeno objects store genotypes from the tabfreq ###########
       #popgen$tab.geno gives the genotyprs of all individuals (n) 
       sim.genotypes <- simugeno(tab = pop.afs, 
@@ -201,7 +201,7 @@ LR_calculator <- function(file.name, num_contribs, num_sims, is.a.truecontrib){
   ##########################
   
   else if (is.a.truecontrib == 1){   
-    set.seed (458) 
+    #set.seed (458) 
     j = 1
   
     while (j < num_sims){ 
@@ -255,7 +255,7 @@ LR_calculator <- function(file.name, num_contribs, num_sims, is.a.truecontrib){
       #############################
       
         k = 1
-        set.seed(657)
+      
         while (k < 14){  
          
          known.contrib.all.atk.pros <- c()
@@ -265,7 +265,7 @@ LR_calculator <- function(file.name, num_contribs, num_sims, is.a.truecontrib){
                                                             "/")[[1]])
          } else {
           
-            for(i in 1:(num_contribs - 1)){
+            for(i in 1:(num_contribs)){
            known.contrib.all.atk.pros = c( known.contrib.all.atk.pros, 
                                    as.numeric(strsplit(sim.mix$mix.prof[i,k], 
                                                        "/")[[1]])
@@ -338,6 +338,7 @@ LR_calculator <- function(file.name, num_contribs, num_sims, is.a.truecontrib){
         #end of  while (k < 14)  
         }
 
+      
       noncontrib.LR.vector[j] <- prod(singleLR_vector)
       j = j + 1
       #end of else, for more than 1 contributor 
@@ -359,7 +360,7 @@ LR_calculator <- function(file.name, num_contribs, num_sims, is.a.truecontrib){
 
 #TEST AREA 
 #file.name,num_contribs,num_sims,is.a.truecontrib)  
-LRs <- LR_calculator("Africa_new.csv", 2, 100, 0)
+LRs <- LR_calculator("Cree.243_new.csv", 3, 101, 1)
 
 
 #######################################################
@@ -372,9 +373,9 @@ LRs <- LR_calculator("Africa_new.csv", 2, 100, 0)
 #STEP:1 Is the code that makes an empty 3d arratthen passes each population to the total contrib function 
 
 
-
+#make a variable that is num of sims 
 #setting up the empty 3d array, rows are pop, columns are # of contrib, iteate-1 is the sheets of the cube
-true.array_3d = array(rep(1,10*8*length(pops.for.sims)), dim =c(10,8,length(pops.for.sims)))
+true.array_3d = array(rep(1,100*8*length(pops.for.sims)), dim =c(100,8,length(pops.for.sims)))
 
 #view empty array
 true.array_3d 
@@ -386,14 +387,16 @@ true.array_3d
 # z are the slices of 1000 num_sims [z,,]
 #we need n+1 simulations
 for (y in 1:length(pops.for.sims)) {
-  
+  print(y)
   for (x in 1:length(contributer)) {
-    result <-LR_calculator(pops.for.sims[y], x, 11, 0)
-    print(y)
+  
+    result <-LR_calculator(pops.for.sims[y], x, 101, 0)
+    
     true.array_3d[,x,y] = result
   }
 }
 
+write
 
 ######################################STEP:1 3d array for NON CONTRIBUTOR all populations 3/16/19########################################
 # STEP 1: same as above but with NON CONTRIBUTOR code
@@ -401,10 +404,11 @@ for (y in 1:length(pops.for.sims)) {
 
 
 #setting up the empty 3d array, rows are pop, columns are # of contrib, iteate-1 is the sheets of the cube
-non.contrib.fpr.array = array(rep(1,10*8*length(pops.for.sims)), dim =c(10,8,length(pops.for.sims)))
+non.contrib.fpr.array = array(rep(1,1000*8*length(pops.for.sims)), dim =c(1000,8,length(pops.for.sims)))
 
 #view empty array
 non.contrib.fpr.array 
+
 
 # x is the number of contributors [,x,]
 # y are the populations [,,y]
@@ -414,26 +418,32 @@ non.contrib.fpr.array
 
 ptm <- proc.time()
 for (y in 1:length(pops.for.sims)) {
-  
+  print(y)
   for (x in 1:length(contributer)) {
-    print(paste("population", pops.for.sims[y]))
-    LR_calculator(pops.for.sims[y], x, 11, 1)
+    result = LR_calculator(pops.for.sims[y], x, 1001, 1)
     non.contrib.fpr.array[,x,y] = result
     
   }
 }
 
-proc.time() - ptm
+nonproc.time() - ptm
 non.contrib.fpr.array
 
 ########################################## STEP:2 Loop that counts FPR greater than -1 for the entire 3d array #######################################################################
 ## This loop counts the number of FPRs found in each population per contributor and stores it in the matrix FPRcount
 
-fprcount_mat = matrix(1:88,nrow = length(pops.for.sims),ncol = 8)
+###change this to for sims 
+pops.for.sim = y - 1
+#this needs to be placed back in 
+#fprcount_mat = matrix(1:88,nrow = length(pops.for.sim),ncol = 8)
 
-for (i in 1:11){
+fprcount_mat = matrix(1:456,nrow = 57,ncol = 8)
+
+for (i in 1:pops.for.sim){
+  # i makes the connection from population 
   population = pops.for.sims[i]
   
+
   for(j in 1:8){
     contrib = j
     count=1
@@ -443,7 +453,7 @@ for (i in 1:11){
       sticks = non.contrib.fpr.array[k,j,i]
       
       
-      if(sticks > -1){
+      if(sticks > 0){
         
         count = count + 1
         print(count)
@@ -454,7 +464,7 @@ for (i in 1:11){
     
     
     result = (count - 1)
-    print(result)
+   # print(result)
     fprcount_mat[i,j] = result
     
   }
@@ -475,7 +485,7 @@ write.csv(total.fpr.true.contrib.mat, "truecontrib_mat2.csv")
 
 iterations = 1:8
 colnames(total.fpr.non.contrib.mat) <- iterations
-rownames(total.fpr.non.contrib.mat) <- pops.for.sims
+rownames(total.fpr.non.contrib.mat) <- pops.for.sims[1:57]
 total.fpr.non.contrib.mat
 
 write.csv(non_fpr_mat, "noncontrib_mat2.csv")
@@ -487,6 +497,7 @@ write.csv(non_fpr_mat, "noncontrib_mat2.csv")
 #This is the vector used to make the different colored lines for all of the populations 
 colorvec = c( "blue","red","green","purple","violet","yellow","pink","black")
 
+
 plot.new()
 
 #This intiates the plot 
@@ -496,8 +507,8 @@ plot(x=c(),y=c(),xlim = c(1,8),ylim = c(0,1000),main =" False Positives  (1000 i
 
 #this loop adds points onto the intiated plot with i reffering to the location in the matrix 
 for(i in 1:8){
-  points(non_fprcount_mat[i,], col= colorvec[i], lty=1)
-  points(true_fprcount_mat[i,], col=colorvec[i],lty=1)
+  points(total.fpr.non.contrib.mat[i,], col= colorvec[i], lty=1)
+  #points(true_fprcount_mat[i,], col=colorvec[i],lty=1)
 }
 
 legend("center", legend=c("AA","Apache","Bahamian","White","Chamorro","Filipino",
@@ -511,9 +522,10 @@ legend("center", legend=c("AA","Apache","Bahamian","White","Chamorro","Filipino"
 #this is an empty matrix that looks through the 3d array and counts the instances where the LR is greater than -1
 # the loop then divides the # of LR by the amount of iterations and it is stored in a Matrix that will be used for plotting 
 
-fpr.average.mat = matrix(1:88,nrow = length(pops.for.sims),ncol = 8)
+#fpr.average.mat = matrix(1:88,nrow = length(pops.for.sims),ncol = 8)
+fpr.average.mat = matrix(1:456,nrow = 57,ncol = 8)
 
-for (i in 1:11){
+for (i in 1:57){
   population = pops.for.sims[i]
   
   for(j in 1:8){
@@ -526,7 +538,7 @@ for (i in 1:11){
       sticks = non.contrib.fpr.array[k,j,i]
       
       
-      if(sticks > -1){
+      if(sticks > 0){
         
         count = count + 1
         print(count)
@@ -536,15 +548,15 @@ for (i in 1:11){
     }
     
     #this needs to be changed depending on how many iterations are used 
-    result = (count - 1)/10000
+    result = (count - 1)/1000
     print(result)
     fpr.average.mat[i,j] = result
     
   }
 }
 
-true.contrib.ave.fpr_mat <-fpraverage_mat
-non.contrib.ave.fpr_mat <- fpraverage_mat
+true.contrib.ave.fpr_mat <-fpr.average.mat
+non.contrib.ave.fpr_mat <- fpr.average.mat
 ################################# STEP:5  PLOT for AVerage FPR  counts of TRUE & NON CONTRIBUTORS#####################################################################
 #STEP 3 takes the non contrib and true contrib matrixes and puts them on one plot 
 
@@ -556,14 +568,14 @@ colorvec = c( "blue","red","green","purple","violet","yellow","pink","black")
 
 #This intiates the plot 
 plot.new()
-plot(x=c(),y=c(),xlim = c(1,8),ylim = c(0,1000),main =" False Positives  (1000 iterations)",ylab = "false postive", xlab = 
+plot(x=c(),y=c(),xlim = c(1,8),ylim = c(0,1),main =" False Positives  (1000 iterations)",ylab = "false postive", xlab = 
        "number of contributors")
 
 
 #this loop adds points onto the intiated plot with i reffering to the location in the matrix 
 for(i in 1:8){
   points(non.contrib.ave.fpr_mat[i,], col= colorvec[i], lty=1)
-  points(true.contrib.ave.fpr_mat[i,], col=colorvec[i],lty=1)
+ # points(true.contrib.ave.fpr_mat[i,], col=colorvec[i],lty=1)
 }
 
 #creates a lengend the colors need to be checked to make sure there are no duplicate colors!
@@ -577,16 +589,19 @@ legend("center", legend=c("AA","Apache","Bahamian","White","Chamorro","Filipino"
 # And adds oncontributor count of values greater than -1 for the 7th contributor in all populations to column 2 
 # Next we plot the matrix
 
-FPR7_matrix <-matrix(1:11,nrow = 11,ncol = 2)
-FPR7_matrix[,2] <-non.contrib.ave.fpr_mat[,7]
+FPR6_matrix <-matrix(1:57,nrow = 57,ncol = 2)
+FPR6_matrix[,2] <-non.contrib.ave.fpr_mat[,6]
 
 col_vec <- c("Expected Heterozygosity","FPR")
-colnames(FPR7_matrix) <- col_vec
+colnames(FPR6_matrix) <- col_vec
 
-rownames(FPR7_matrix) <- pop_vec2
-FPR7_matrix[,1] <- exphetero_mat
+#Need to import the Average.Expected.Hetero_loading.csv
+average.eh.matrix <- readRDS("Average.Expected.Hetero_loading.csv")
 
-FPR7_matrix
+rownames(FPR6_matrix) <- pops.for.sims[1:57]  #pop_vec2
+FPR6_matrix[,1] <- average.eh.matrix[1:57]
+
+FPR6_matrix
 
 
 
@@ -597,7 +612,7 @@ colorvec = c("blue","red","green","purple","violet","yellow","pink","black","cha
 
 #This intiates the plot 
 plot.new()
-plot(FPR7_matrix,main ="FPR vs Expected Heterozygosity (7 contributors)",ylab = "FPR", xlab = 
+plot(FPR6_matrix,main ="FPR vs Expected Heterozygosity (6 contributors)",ylab = "FPR", xlab = 
        "Expected Heterozygosity")
 
 
