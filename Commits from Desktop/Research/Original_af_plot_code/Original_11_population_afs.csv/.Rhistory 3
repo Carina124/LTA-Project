@@ -1,0 +1,512 @@
+Td=0,Vp=0,Vd=c(as.numeric(strsplit(mix.func$mix.prof[1,k], "/")[[1]])),
+xd=1,xp=0,theta=0,prDHet=c(0.2,0.2),
+prDHom=c(0.04,0.04),prC=0,freq=freq_vector[[k,1]])
+#print(single_LR$LR)
+LR_vector <- c(LR_vector,single_LR$LR)
+k = k + 1
+}
+} else {
+k = 1                             ## LR Calculation. ##
+while (k < 14){
+## Calculated 13 times for 13 loci ##
+c = num_contribs - 1
+listOfAlleles = c()
+for(i in 1:num_contribs){
+listOfAlleles = c(listOfAlleles, as.numeric(strsplit(mix.func$mix.prof[i,k], "/")[[1]]))
+listofAllels.Defense = c()
+for (i in 1:c){
+listofAllels.Defense = c(listofAllels.Defense, as.numeric(strsplit(mix.func$mix.prof[i,k], "/")[[1]]))
+}
+}
+single_LR <- LR(Repliste=c(mix.func@mix.all[[k]]),
+Tp=c(listOfAlleles),
+Td=c(listofAllels.Defense), ## Vd = Non contrib under Hd - Suspect ##
+Vp=0,Vd=c(as.numeric(tail(listOfAlleles,2), "/")[[1]]), ## Vp = Non contrib under Hp - 0 ##
+xd=1,xp=0,theta=0,prDHet=c(0.2,0.2),
+prDHom=c(0.04,0.04),prC=0,freq=freq_vector[[k,1]])
+LR_vector <- c(LR_vector,single_LR$LR)
+k = k + 1
+}
+}
+LR_vector_true[j] <- ((LR_vector[1])*(LR_vector[2])*(LR_vector[3])*
+(LR_vector[4])*(LR_vector[5])*(LR_vector[6])*
+(LR_vector[7])*(LR_vector[8])*(LR_vector[9])*
+(LR_vector[10])*(LR_vector[11])*(LR_vector[12])*
+(LR_vector[13]))
+j = j + 1
+total_LR_vector <- c(log10(LR_vector_true))
+total_LR_plot_vector3 <<- total_LR_vector
+#print(j)
+}
+} else if (non_or_true_contrib == 1) {
+j = 1
+#set.seed(657)
+while (j < iterations){ #loop over simulations
+mix.func <- simumix(afrigeno,ncontri = num_contribs)
+LR_vector <- c()
+total_LR_vector <- c()
+if (num_contribs == 1){
+k = 1
+while (k < 14){
+single_LR <- LR(Repliste=c(mix.func$mix.all[[k]]),
+Tp=c(as.numeric(strsplit(noncon.sus$mix.prof[1,k], "/")[[1]])),
+Td=0,Vp=0,Vd=c(as.numeric(strsplit(noncon.sus$mix.prof[1,k], "/")[[1]])),
+xd=1,xp=0,theta=0,prDHet=c(0.2,0.2),
+prDHom=c(0.04,0.04),prC=0,freq=freq_vector[[k,1]])
+print(listOfAlleles)
+LR_vector <- c(LR_vector,single_LR$LR)
+k = k + 1
+}
+} else {
+k = 1
+while (k < 14){
+c = num_contribs - 1
+listOfAlleles = c()
+for(i in 1:num_contribs){
+listOfAlleles = c(listOfAlleles, as.numeric(strsplit(mix.func$mix.prof[i,k], "/")[[1]]))
+listofAllels.Defense = c()
+for (i in 1:c){
+listofAllels.Defense = c(listofAllels.Defense, as.numeric(strsplit(mix.func$mix.prof[i,k], "/")[[1]]))
+}
+}
+single_LR <- LR(Repliste=c(mix.func$mix.all[[k]]),
+Tp=c(listOfAlleles,
+as.numeric(strsplit(noncon.sus$mix.prof[1,k], "/")[[1]])),
+Td=c(listofAllels.Defense),
+Vp=0,Vd=c(as.numeric(strsplit(noncon.sus$mix.prof[1,k], "/")[[1]])),
+xd=1,xp=0,theta=0,prDHet=c(0.2,0.2),
+prDHom=c(0.04,0.04),prC=0,freq=freq_vector[[k,1]])
+LR_vector <- c(LR_vector,single_LR$LR)
+k = k + 1
+}
+}
+total_LR[j] <- (LR_vector[1]*LR_vector[2]*LR_vector[3]*
+LR_vector[4]*LR_vector[5]*LR_vector[6]*
+LR_vector[7]*LR_vector[8]*LR_vector[9]*
+LR_vector[10]*LR_vector[11]*LR_vector[12]*
+LR_vector[13])
+total_LR_vector <- c(log10(total_LR))
+total_LR_vector[total_LR_vector < 0.0] <- -1
+total_LR_plot_vector_non3 <<- total_LR_vector
+j = j + 1
+}
+}
+return(total_LR_vector)
+}
+total_contrib_function("Trini_pap.csv", 1000, 1, 1001,1)
+############### Total Contrib Function that contains eval population 5/9/19  ######################################
+total_contrib_function_eval_pop <- function(file_name,eval_pop,num_contribs,iterations,non_or_true_contrib)
+{
+set.seed(657)
+LR_vector_true <- c()
+total_LR <- c()
+allelefreq_tbl <- read.csv(file_name)
+pop_freq <- tabfreq(tab=allelefreq_tbl, pop.names=as.factor('population'))
+allelefreq_tbl_eval <- read.csv(eval_pop)
+pop_freq_eval <- tabfreq(tab=allelefreq_tbl_eval, pop.names=as.factor('population'))
+popgeno_eval <- simugeno(tab=pop_freq_eval, n=1, which.loc = c("D8S1179", "TH01" ,"FGA", "CSF1PO",
+"TPOX", "D3S1358", "D7S820", "D16S539",
+"D18S51", "D21S11", "D2S1338", "D19S433","vWA"))
+if (non_or_true_contrib == 0){
+j = 1
+while (j < iterations){
+popgeno <- simugeno(tab=pop_freq, n=num_contribs, which.loc = c("D8S1179", "TH01" ,"FGA", "CSF1PO",
+"TPOX", "D3S1358", "D7S820", "D16S539",
+"D18S51", "D21S11", "D2S1338", "D19S433","vWA"))
+mix.func <- simumix(popgeno,ncontri = num_contribs)
+LR_vector <- c()
+total_LR_vector <- c()
+if (num_contribs == 1){
+k = 1
+while (k < 14){
+single_LR <- LR(Repliste=c(mix.func$mix.all[[k]]),
+Tp=c(as.numeric(strsplit(mix.func$mix.prof[1,k], "/")[[1]])),
+Td=0,Vp=0,Vd=c(as.numeric(strsplit(mix.func$mix.prof[1,k], "/")[[1]])),
+xd=1,xp=0,theta=0,prDHet=c(0.2,0.2),
+prDHom=c(0.04,0.04),prC=0,freq=popgeno_eval@tab.freq[[1]][[k]])
+LR_vector <- c(LR_vector,single_LR$LR)
+k = k + 1
+}
+} else {
+k = 1               ## LR Calculation. ##
+while (k < 14){
+## Calculated 13 times for 13 loci ##
+c = num_contribs - 1
+listOfAlleles = c()
+for(i in 1:num_contribs){
+listOfAlleles = c(listOfAlleles, as.numeric(strsplit(mix.func$mix.prof[i,k], "/")[[1]]))
+listofAllels.Defense = c()
+for (i in 1:c){
+listofAllels.Defense = c(listofAllels.Defense, as.numeric(strsplit(mix.func$mix.prof[i,k], "/")[[1]]))
+}
+}
+single_LR <- LR(Repliste=c(mix.func@mix.all[[k]]),
+Tp=c(listOfAlleles),
+Td=c(listofAllels.Defense), ## Vd = Non contrib under Hd - Suspect ##
+Vp=0,Vd=c(as.numeric(tail(listOfAlleles,2), "/")[[1]]), ## Vp = Non contrib under Hp - 0 ##
+xd=1,xp=0,theta=0,prDHet=c(0.2,0.2),
+prDHom=c(0.04,0.04),prC=0,freq=popgeno_eval@tab.freq[[1]][[k]])
+while(is.na(single_LR$LR) || is.infinite(single_LR$LR) || is.nan(single_LR$LR) || single_LR$LR<0) {
+single_LR <- LR(Repliste=c(mix.func@mix.all[[k]]),
+Tp=c(listOfAlleles),
+Td=c(listofAllels.Defense), ## Vd = Non contrib under Hd - Suspect ##
+Vp=0,Vd=c(as.numeric(tail(listOfAlleles,2), "/")[[1]]), ## Vp = Non contrib under Hp - 0 ##
+xd=1,xp=0,theta=0,prDHet=c(0.2,0.2),
+prDHom=c(0.04,0.04),prC=0,freq=popgeno_eval@tab.freq[[1]][[k]])
+}
+LR_vector <- c(LR_vector,single_LR$LR)
+k = k + 1
+}
+}
+LR_vector_true[j] <- prod(LR_vector)
+j = j + 1
+total_LR_vector <- c(log10(LR_vector_true))
+}
+} else if (non_or_true_contrib == 1) {
+j = 1
+while (j < iterations){ #loop over simulations
+print(paste("on iteration number", j))
+popgeno <- simugeno(tab=pop_freq, n=num_contribs, which.loc = c("D8S1179", "TH01" ,"FGA", "CSF1PO",
+"TPOX", "D3S1358", "D7S820", "D16S539",
+"D18S51", "D21S11", "D2S1338", "D19S433","vWA"))
+noncontrib <- simugeno(tab=pop_freq, n=1, which.loc = c("D8S1179", "TH01" ,"FGA", "CSF1PO",
+"TPOX", "D3S1358", "D7S820", "D16S539",
+"D18S51", "D21S11", "D2S1338", "D19S433",
+"vWA"))
+noncon.sus <- simumix(noncontrib, ncontri = 1)
+mix.func <- simumix(popgeno,ncontri = num_contribs)
+print("made mixture")
+LR_vector <- c()
+total_LR_vector <- c()
+if (num_contribs == 1){
+k = 1
+while (k < 14){
+single_LR <- LR(Repliste=c(mix.func$mix.all[[k]]),
+Tp=c(as.numeric(strsplit(noncon.sus$mix.prof[1,k], "/")[[1]])),
+Td=0,Vp=0,Vd=c(as.numeric(strsplit(noncon.sus$mix.prof[1,k], "/")[[1]])),
+xd=1,xp=0,theta=0,prDHet=c(0.2,0.2),
+prDHom=c(0.04,0.04),prC=0,freq=popgeno_eval@tab.freq[[1]][[k]])
+LR_vector <- c(LR_vector,single_LR$LR)
+k = k + 1
+}
+} else {
+k = 1
+while (k < 14){
+c = num_contribs - 1
+listOfAlleles = c()
+for(i in 1:num_contribs){
+listOfAlleles = c(listOfAlleles, as.numeric(strsplit(mix.func$mix.prof[i,k], "/")[[1]]))
+listofAllels.Defense = c()
+for (i in 1:c){
+listofAllels.Defense = c(listofAllels.Defense, as.numeric(strsplit(mix.func$mix.prof[i,k], "/")[[1]]))
+}
+}
+single_LR <- LR(Repliste=c(mix.func$mix.all[[k]]),
+Tp=c(listOfAlleles,
+as.numeric(strsplit(noncon.sus$mix.prof[1,k], "/")[[1]])),
+Td=c(listofAllels.Defense),
+Vp=0,Vd=c(as.numeric(strsplit(noncon.sus$mix.prof[1,k], "/")[[1]])),
+xd=1,xp=0,theta=0,prDHet=c(0.2,0.2),
+prDHom=c(0.04,0.04),prC=0,freq=popgeno_eval@tab.freq[[1]][[k]])
+while(is.na(single_LR$LR) #|| #is.infinite(single_LR$LR)
+|| is.nan(single_LR$LR) || single_LR$LR<0) {
+single_LR <- LR(Repliste=c(mix.func$mix.all[[k]]),
+Tp=c(listOfAlleles,
+as.numeric(strsplit(noncon.sus$mix.prof[1,k], "/")[[1]])),
+Td=c(listofAllels.Defense),
+Vp=0,Vd=c(as.numeric(strsplit(noncon.sus$mix.prof[1,k], "/")[[1]])),
+xd=1,xp=0,theta=0,prDHet=c(0.2,0.2),
+prDHom=c(0.04,0.04),prC=0,freq=popgeno_eval@tab.freq[[1]][[k]])
+print("in the while crappy forensim result check")
+}
+LR_vector <- c(LR_vector,single_LR$LR)
+k = k + 1
+}
+}
+LR_vector_true[j] <- prod(LR_vector)
+total_LR_vector <- c(log10(LR_vector_true))
+#total_LR_vector[total_LR_vector < 0.0] <- -1
+j = j + 1
+}
+}
+return(total_LR_vector)
+}
+LRs = total_contrib_function_eval_pop('Filipino.csv','Filipino.csv', 6, 100, 1)
+############### Total Contrib Function that contains eval population 5/9/19  ######################################
+total_contrib_function_eval_pop <- function(file_name,eval_pop,num_contribs,iterations,non_or_true_contrib)
+{
+set.seed(657)
+LR_vector_true <- c()
+total_LR <- c()
+allelefreq_tbl <- read.csv(file_name)
+pop_freq <- tabfreq(tab=allelefreq_tbl, pop.names=as.factor('population'))
+allelefreq_tbl_eval <- read.csv(eval_pop)
+pop_freq_eval <- tabfreq(tab=allelefreq_tbl_eval, pop.names=as.factor('population'))
+popgeno_eval <- simugeno(tab=pop_freq_eval, n=1, which.loc = c("D8S1179", "TH01" ,"FGA", "CSF1PO",
+"TPOX", "D3S1358", "D7S820", "D16S539",
+"D18S51", "D21S11", "D2S1338", "D19S433","vWA"))
+if (non_or_true_contrib == 0){
+j = 1
+while (j < iterations){
+popgeno <- simugeno(tab=pop_freq, n=num_contribs, which.loc = c("D8S1179", "TH01" ,"FGA", "CSF1PO",
+"TPOX", "D3S1358", "D7S820", "D16S539",
+"D18S51", "D21S11", "D2S1338", "D19S433","vWA"))
+mix.func <- simumix(popgeno,ncontri = num_contribs)
+LR_vector <- c()
+total_LR_vector <- c()
+if (num_contribs == 1){
+k = 1
+while (k < 14){
+single_LR <- LR(Repliste=c(mix.func$mix.all[[k]]),
+Tp=c(as.numeric(strsplit(mix.func$mix.prof[1,k], "/")[[1]])),
+Td=0,Vp=0,Vd=c(as.numeric(strsplit(mix.func$mix.prof[1,k], "/")[[1]])),
+xd=1,xp=0,theta=0,prDHet=c(0.2,0.2),
+prDHom=c(0.04,0.04),prC=0,freq=popgeno_eval@tab.freq[[1]][[k]])
+LR_vector <- c(LR_vector,single_LR$LR)
+k = k + 1
+}
+} else {
+k = 1               ## LR Calculation. ##
+while (k < 14){
+## Calculated 13 times for 13 loci ##
+c = num_contribs - 1
+listOfAlleles = c()
+for(i in 1:num_contribs){
+listOfAlleles = c(listOfAlleles, as.numeric(strsplit(mix.func$mix.prof[i,k], "/")[[1]]))
+listofAllels.Defense = c()
+for (i in 1:c){
+listofAllels.Defense = c(listofAllels.Defense, as.numeric(strsplit(mix.func$mix.prof[i,k], "/")[[1]]))
+}
+}
+single_LR <- LR(Repliste=c(mix.func@mix.all[[k]]),
+Tp=c(listOfAlleles),
+Td=c(listofAllels.Defense), ## Vd = Non contrib under Hd - Suspect ##
+Vp=0,Vd=c(as.numeric(tail(listOfAlleles,2), "/")[[1]]), ## Vp = Non contrib under Hp - 0 ##
+xd=1,xp=0,theta=0,prDHet=c(0.2,0.2),
+prDHom=c(0.04,0.04),prC=0,freq=popgeno_eval@tab.freq[[1]][[k]])
+while(is.na(single_LR$LR) || is.infinite(single_LR$LR) || is.nan(single_LR$LR) || single_LR$LR<0) {
+single_LR <- LR(Repliste=c(mix.func@mix.all[[k]]),
+Tp=c(listOfAlleles),
+Td=c(listofAllels.Defense), ## Vd = Non contrib under Hd - Suspect ##
+Vp=0,Vd=c(as.numeric(tail(listOfAlleles,2), "/")[[1]]), ## Vp = Non contrib under Hp - 0 ##
+xd=1,xp=0,theta=0,prDHet=c(0.2,0.2),
+prDHom=c(0.04,0.04),prC=0,freq=popgeno_eval@tab.freq[[1]][[k]])
+}
+LR_vector <- c(LR_vector,single_LR$LR)
+k = k + 1
+}
+}
+LR_vector_true[j] <- prod(LR_vector)
+j = j + 1
+total_LR_vector <- c(log10(LR_vector_true))
+}
+} else if (non_or_true_contrib == 1) {
+j = 1
+while (j < iterations){ #loop over simulations
+print(paste("on iteration number", j))
+popgeno <- simugeno(tab=pop_freq, n=num_contribs, which.loc = c("D8S1179", "TH01" ,"FGA", "CSF1PO",
+"TPOX", "D3S1358", "D7S820", "D16S539",
+"D18S51", "D21S11", "D2S1338", "D19S433","vWA"))
+noncontrib <- simugeno(tab=pop_freq, n=1, which.loc = c("D8S1179", "TH01" ,"FGA", "CSF1PO",
+"TPOX", "D3S1358", "D7S820", "D16S539",
+"D18S51", "D21S11", "D2S1338", "D19S433",
+"vWA"))
+noncon.sus <- simumix(noncontrib, ncontri = 1)
+mix.func <- simumix(popgeno,ncontri = num_contribs)
+print("made mixture")
+LR_vector <- c()
+total_LR_vector <- c()
+if (num_contribs == 1){
+k = 1
+while (k < 14){
+single_LR <- LR(Repliste=c(mix.func$mix.all[[k]]),
+Tp=c(as.numeric(strsplit(noncon.sus$mix.prof[1,k], "/")[[1]])),
+Td=0,Vp=0,Vd=c(as.numeric(strsplit(noncon.sus$mix.prof[1,k], "/")[[1]])),
+xd=1,xp=0,theta=0,prDHet=c(0.2,0.2),
+prDHom=c(0.04,0.04),prC=0,freq=popgeno_eval@tab.freq[[1]][[k]])
+LR_vector <- c(LR_vector,single_LR$LR)
+k = k + 1
+}
+} else {
+k = 1
+while (k < 14){
+c = num_contribs - 1
+listOfAlleles = c()
+for(i in 1:num_contribs){
+listOfAlleles = c(listOfAlleles, as.numeric(strsplit(mix.func$mix.prof[i,k], "/")[[1]]))
+listofAllels.Defense = c()
+for (i in 1:c){
+listofAllels.Defense = c(listofAllels.Defense, as.numeric(strsplit(mix.func$mix.prof[i,k], "/")[[1]]))
+}
+}
+single_LR <- LR(Repliste=c(mix.func$mix.all[[k]]),
+Tp=c(listOfAlleles,
+as.numeric(strsplit(noncon.sus$mix.prof[1,k], "/")[[1]])),
+Td=c(listofAllels.Defense),
+Vp=0,Vd=c(as.numeric(strsplit(noncon.sus$mix.prof[1,k], "/")[[1]])),
+xd=1,xp=0,theta=0,prDHet=c(0.2,0.2),
+prDHom=c(0.04,0.04),prC=0,freq=popgeno_eval@tab.freq[[1]][[k]])
+while(is.na(single_LR$LR) #|| #is.infinite(single_LR$LR)
+|| is.nan(single_LR$LR) || single_LR$LR<0) {
+single_LR <- LR(Repliste=c(mix.func$mix.all[[k]]),
+Tp=c(listOfAlleles,
+as.numeric(strsplit(noncon.sus$mix.prof[1,k], "/")[[1]])),
+Td=c(listofAllels.Defense),
+Vp=0,Vd=c(as.numeric(strsplit(noncon.sus$mix.prof[1,k], "/")[[1]])),
+xd=1,xp=0,theta=0,prDHet=c(0.2,0.2),
+prDHom=c(0.04,0.04),prC=0,freq=popgeno_eval@tab.freq[[1]][[k]])
+print("in the while crappy forensim result check")
+}
+LR_vector <- c(LR_vector,single_LR$LR)
+k = k + 1
+}
+}
+LR_vector_true[j] <- prod(LR_vector)
+total_LR_vector <- c(log10(LR_vector_true))
+#total_LR_vector[total_LR_vector < 0.0] <- -1
+j = j + 1
+}
+}
+return(total_LR_vector)
+}
+#LRs = total_contrib_function_eval_pop('Filipino.csv','Filipino.csv', 6, 100, 1)
+setwd("~/Desktop/Research/Orginal CSV from paper .csv")
+############### Total Contrib Function that contains eval population 5/9/19  ######################################
+total_contrib_function_eval_pop <- function(file_name,eval_pop,num_contribs,iterations,non_or_true_contrib)
+{
+set.seed(657)
+LR_vector_true <- c()
+total_LR <- c()
+allelefreq_tbl <- read.csv(file_name)
+pop_freq <- tabfreq(tab=allelefreq_tbl, pop.names=as.factor('population'))
+allelefreq_tbl_eval <- read.csv(eval_pop)
+pop_freq_eval <- tabfreq(tab=allelefreq_tbl_eval, pop.names=as.factor('population'))
+popgeno_eval <- simugeno(tab=pop_freq_eval, n=1, which.loc = c("D8S1179", "TH01" ,"FGA", "CSF1PO",
+"TPOX", "D3S1358", "D7S820", "D16S539",
+"D18S51", "D21S11", "D2S1338", "D19S433","vWA"))
+if (non_or_true_contrib == 0){
+j = 1
+while (j < iterations){
+popgeno <- simugeno(tab=pop_freq, n=num_contribs, which.loc = c("D8S1179", "TH01" ,"FGA", "CSF1PO",
+"TPOX", "D3S1358", "D7S820", "D16S539",
+"D18S51", "D21S11", "D2S1338", "D19S433","vWA"))
+mix.func <- simumix(popgeno,ncontri = num_contribs)
+LR_vector <- c()
+total_LR_vector <- c()
+if (num_contribs == 1){
+k = 1
+while (k < 14){
+single_LR <- LR(Repliste=c(mix.func$mix.all[[k]]),
+Tp=c(as.numeric(strsplit(mix.func$mix.prof[1,k], "/")[[1]])),
+Td=0,Vp=0,Vd=c(as.numeric(strsplit(mix.func$mix.prof[1,k], "/")[[1]])),
+xd=1,xp=0,theta=0,prDHet=c(0.2,0.2),
+prDHom=c(0.04,0.04),prC=0,freq=popgeno_eval@tab.freq[[1]][[k]])
+LR_vector <- c(LR_vector,single_LR$LR)
+k = k + 1
+}
+} else {
+k = 1               ## LR Calculation. ##
+while (k < 14){
+## Calculated 13 times for 13 loci ##
+c = num_contribs - 1
+listOfAlleles = c()
+for(i in 1:num_contribs){
+listOfAlleles = c(listOfAlleles, as.numeric(strsplit(mix.func$mix.prof[i,k], "/")[[1]]))
+listofAllels.Defense = c()
+for (i in 1:c){
+listofAllels.Defense = c(listofAllels.Defense, as.numeric(strsplit(mix.func$mix.prof[i,k], "/")[[1]]))
+}
+}
+single_LR <- LR(Repliste=c(mix.func@mix.all[[k]]),
+Tp=c(listOfAlleles),
+Td=c(listofAllels.Defense), ## Vd = Non contrib under Hd - Suspect ##
+Vp=0,Vd=c(as.numeric(tail(listOfAlleles,2), "/")[[1]]), ## Vp = Non contrib under Hp - 0 ##
+xd=1,xp=0,theta=0,prDHet=c(0.2,0.2),
+prDHom=c(0.04,0.04),prC=0,freq=popgeno_eval@tab.freq[[1]][[k]])
+while(is.na(single_LR$LR) || is.infinite(single_LR$LR) || is.nan(single_LR$LR) || single_LR$LR<0) {
+single_LR <- LR(Repliste=c(mix.func@mix.all[[k]]),
+Tp=c(listOfAlleles),
+Td=c(listofAllels.Defense), ## Vd = Non contrib under Hd - Suspect ##
+Vp=0,Vd=c(as.numeric(tail(listOfAlleles,2), "/")[[1]]), ## Vp = Non contrib under Hp - 0 ##
+xd=1,xp=0,theta=0,prDHet=c(0.2,0.2),
+prDHom=c(0.04,0.04),prC=0,freq=popgeno_eval@tab.freq[[1]][[k]])
+}
+LR_vector <- c(LR_vector,single_LR$LR)
+k = k + 1
+}
+}
+LR_vector_true[j] <- prod(LR_vector)
+j = j + 1
+total_LR_vector <- c(log10(LR_vector_true))
+}
+} else if (non_or_true_contrib == 1) {
+j = 1
+while (j < iterations){ #loop over simulations
+print(paste("on iteration number", j))
+popgeno <- simugeno(tab=pop_freq, n=num_contribs, which.loc = c("D8S1179", "TH01" ,"FGA", "CSF1PO",
+"TPOX", "D3S1358", "D7S820", "D16S539",
+"D18S51", "D21S11", "D2S1338", "D19S433","vWA"))
+noncontrib <- simugeno(tab=pop_freq, n=1, which.loc = c("D8S1179", "TH01" ,"FGA", "CSF1PO",
+"TPOX", "D3S1358", "D7S820", "D16S539",
+"D18S51", "D21S11", "D2S1338", "D19S433",
+"vWA"))
+noncon.sus <- simumix(noncontrib, ncontri = 1)
+mix.func <- simumix(popgeno,ncontri = num_contribs)
+print("made mixture")
+LR_vector <- c()
+total_LR_vector <- c()
+if (num_contribs == 1){
+k = 1
+while (k < 14){
+single_LR <- LR(Repliste=c(mix.func$mix.all[[k]]),
+Tp=c(as.numeric(strsplit(noncon.sus$mix.prof[1,k], "/")[[1]])),
+Td=0,Vp=0,Vd=c(as.numeric(strsplit(noncon.sus$mix.prof[1,k], "/")[[1]])),
+xd=1,xp=0,theta=0,prDHet=c(0.2,0.2),
+prDHom=c(0.04,0.04),prC=0,freq=popgeno_eval@tab.freq[[1]][[k]])
+LR_vector <- c(LR_vector,single_LR$LR)
+k = k + 1
+}
+} else {
+k = 1
+while (k < 14){
+c = num_contribs - 1
+listOfAlleles = c()
+for(i in 1:num_contribs){
+listOfAlleles = c(listOfAlleles, as.numeric(strsplit(mix.func$mix.prof[i,k], "/")[[1]]))
+listofAllels.Defense = c()
+for (i in 1:c){
+listofAllels.Defense = c(listofAllels.Defense, as.numeric(strsplit(mix.func$mix.prof[i,k], "/")[[1]]))
+}
+}
+single_LR <- LR(Repliste=c(mix.func$mix.all[[k]]),
+Tp=c(listOfAlleles,
+as.numeric(strsplit(noncon.sus$mix.prof[1,k], "/")[[1]])),
+Td=c(listofAllels.Defense),
+Vp=0,Vd=c(as.numeric(strsplit(noncon.sus$mix.prof[1,k], "/")[[1]])),
+xd=1,xp=0,theta=0,prDHet=c(0.2,0.2),
+prDHom=c(0.04,0.04),prC=0,freq=popgeno_eval@tab.freq[[1]][[k]])
+while(is.na(single_LR$LR) #|| #is.infinite(single_LR$LR)
+|| is.nan(single_LR$LR) || single_LR$LR<0) {
+single_LR <- LR(Repliste=c(mix.func$mix.all[[k]]),
+Tp=c(listOfAlleles,
+as.numeric(strsplit(noncon.sus$mix.prof[1,k], "/")[[1]])),
+Td=c(listofAllels.Defense),
+Vp=0,Vd=c(as.numeric(strsplit(noncon.sus$mix.prof[1,k], "/")[[1]])),
+xd=1,xp=0,theta=0,prDHet=c(0.2,0.2),
+prDHom=c(0.04,0.04),prC=0,freq=popgeno_eval@tab.freq[[1]][[k]])
+print("in the while crappy forensim result check")
+}
+LR_vector <- c(LR_vector,single_LR$LR)
+k = k + 1
+}
+}
+LR_vector_true[j] <- prod(LR_vector)
+total_LR_vector <- c(log10(LR_vector_true))
+#total_LR_vector[total_LR_vector < 0.0] <- -1
+j = j + 1
+}
+}
+return(total_LR_vector)
+}
+#LRs = total_contrib_function_eval_pop('Filipino.csv','Filipino.csv', 6, 100, 1)
+fpfplrs = total_contrib_function_eval_pop('Filipino.csv','Filipino.csv', 6, 100, 1)

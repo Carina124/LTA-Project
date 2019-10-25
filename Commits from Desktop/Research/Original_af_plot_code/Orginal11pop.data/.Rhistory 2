@@ -1,0 +1,512 @@
+array_3dnoncontrib[,x,y] = result
+}
+}
+proc.time() - ptm
+fprcount_mat = matrix(1:77,nrow = 11,ncol = 7)
+for (i in 1:11){
+population = pop_vec[i]
+print(pop_vec[i])
+for(j in 1:7){
+contrib = j
+count=1
+#sticks is iterations
+#sticks = array_3d[,j,i]
+for(k in 1:1000){
+sticks <<- array_3dnoncontrib[k,j,i]
+if(is.nan(sticks)){
+count = count
+print(paste("nan found at", k,j,i))
+}
+else if(sticks > -1){
+count = count + 1
+}
+}
+result = (count - 1)/1000
+#result = (count - 1)
+#print(result)
+fprcount_mat[i,j] = result
+}
+}
+non_fprcount_mat <- fprcount_mat
+non_fprcount_mat
+iterations = 1:7
+colnames(non_fprcount_mat) <- iterations
+rownames(non_fprcount_mat) <- pop_vec2
+non_fprcount_mat
+write.csv(non_fprcount_mat, "noncontrib_mat2.csv")
+FPR_allpop_tbl <- as.data.frame.table(non_fprcount_mat)
+FPR_allpop_tbl_plot <- qplot(data = FPR_allpop_tbl, x = Var2, y = Freq, color = Var1, xlab = "Number of Contributors", ylab = "False Postive Rate", lwd = 5) + scale_color_brewer(palette = "Spectral", ylab("Population"))
+FPR_allpop_tbl <- as.data.frame.table(non_fprcount_mat)
+FPR_allpop_tbl
+FPR_allpop_tbl_plot <- qplot(data = FPR_allpop_tbl, x = Var2, y = Freq, color = Var1, xlab = "Number of Contributors", ylab = "False Postive Rate", lwd = 5) + scale_color_brewer(palette = "Spectral", ylab("Population"))
+FPR_allpop_tbl_plot <- gplot(data = FPR_allpop_tbl, x = Var2, y = Freq, color = Var1, xlab = "Number of Contributors", ylab = "False Postive Rate", lwd = 5) + scale_color_brewer(palette = "Spectral", ylab("Population"))
+qplot
+library(ggplot2)
+FPR_allpop_tbl_plot <- qplot(data = FPR_allpop_tbl, x = Var2, y = Freq, color = Var1, xlab = "Number of Contributors", ylab = "False Postive Rate", lwd = 5) + scale_color_brewer(palette = "Spectral", ylab("Population"))
+FPR_allpop_tbl_plot
+FPR_allpop_tbl_plot <- qplot(data = FPR_allpop_tbl, x = Var2, y = Freq, color = Var1, xlab = "Number of Contributors", ylab = "False Postive Rate", lwd = 3) + scale_color_brewer(palette = "Spectral", ylab("Population"))
+FPR_allpop_tbl_plot
+#### Removes the grey in the background
+FPR_allpop_plot_2 <- FPR_allpop_tbl_plot + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+fpr
+FPR_allpop_plot_2
+FPR_allpop_tbl_plot <- qplot(data = FPR_allpop_tbl, x = Var2, y = Freq, color = Var1, xlab = "Number of Contributors", ylab = "False Postive Rate", main = "FPR vs. Number of Contributors") + scale_color_brewer(palette = "Spectral", ylab("Population"))
+FPR_allpop_tbl_plot
+FPR_allpop_tbl_plot <- qplot(data = FPR_allpop_tbl, x = Var2, y = Freq, color = Var1, xlab = "Number of Contributors", ylab = "False Postive Rate", main = "FPR vs. Number of Contributors") + scale_color_brewer(palette = "Spectral", ylab("Population"),lwd =5)
+FPR_allpop_tbl_plot <- qplot(data = FPR_allpop_tbl, x = Var2, y = Freq, color = Var1, lwd = 3,xlab = "Number of Contributors", ylab = "False Postive Rate", main = "FPR vs. Number of Contributors") + scale_color_brewer(palette = "Spectral", ylab("Population"))
+#### Removes the grey in the background
+FPR_allpop_plot_2 <- FPR_allpop_tbl_plot + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+FPR_allpop_plot_2
+FPR_allpop_tbl_plot <- qplot(data = FPR_allpop_tbl, x = Var2, y = Freq, color = Var1, lwd = 3,xlab = "Number of Contributors", ylab = "False Postive Rate") + scale_color_brewer(palette = "Spectral", ylab("Population"))
+#### Removes the grey in the background
+FPR_allpop_plot_2 <- FPR_allpop_tbl_plot + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+FPR_allpop_plot_2
+mtcars
+mtcars[1,]
+for (i in mtcars) {
+allmean <- mean(mtcars[,i])
+print(allmean)
+}
+for (i in mtcars) {
+allmean <- mean(mtcars[,i])
+print(allmean)
+}
+for (i in mtcars) {
+allmean <- mean(mtcars[,i,])
+print(allmean)
+}
+which(mtcars, useNames = mpg)
+which(mtcars, mpg == 11)
+?which
+which(mpg == 11)
+mycars
+mtcars
+which(mtcars, mpg == 21.0)
+which(mpg == 11)
+mpg
+which(mtcars == 11)
+which(mtcars == 21.0)
+which(mtcars == 21.4)
+which(mtcars == 110)
+mtcars[97]
+mtcars[97,]
+mtcars
+mtcars[1,]
+mtcars[,1]
+mtcars[,2]
+empty_vec <- c()
+empty_vec <- c()
+for (i in mtcars) {
+mean_value <- mean(mtcars[,i])
+empty_vec <- empty_vec,mean_value
+}
+empty_vec <- c()
+for (i in mtcars) {
+mean_value <- mean(mtcars[i])
+empty_vec <- empty_vec,mean_value
+}
+for (i in 1:dim(mtcars) {
+for (i in 1:dim(mtcars)) {
+mean_value <- mean(mtcars[,i])
+empty_vec <- empty_vec,mean_value
+}
+mtcars[,1]
+mtcars[,2]
+mtcars[,3]
+mtcars[,4]
+mtcars[,5]
+mtcars[,6]
+mtcars[,7]
+mtcars[,8]
+mtcars[,9]
+mtcars[,10]
+mtcars[,11]
+mtcars[,12]
+for (i in mtcars[,i]) {
+mean_value <- mean(mtcars[,i])
+# empty_vec <- empty_vec,mean_value
+}
+for (i in 1:length(mtcars[,i]) {
+mtcars[,,,]
+mtcars[,,]
+mtcars[,,,]
+mtcars[1,1,1]
+mtcars[1,1,]
+mtcars[1,,]
+data.class(mtcars)
+mtcars[1,1,7]
+mtcars[1,1,2]
+mtcars[1,1,6]
+mtcars[1,1,21]
+mtcars[1,]
+mtcars[1,2,3]
+mtcars[1,2,4]
+mtcars[1,3,1]
+mtcars[1,3,2]
+mtcars[2,3,1]
+mtcars[1,]
+mtcars[2,]
+mtcars[3,]
+mpcars[3]
+mtcars[3,]
+mtcars[3,1]
+mtcars[3,]
+mtcars[3,1]
+mtcars[3,2]
+mtcars[3,2]
+mtcars[3,,1]
+mtcars[,,]
+mean(mtcars(,,1))
+mtcars[3,,1]
+mtcars
+mean(mtcars)
+mean(mtcars[,,2])
+mean(mtcars[,1,])
+mean(mtcars[,2,])
+mean(mtcars[,3,])
+mean(mtcars[1,,])
+empty_vec <- c()
+for (i in mtcars {
+for (i in 1:length(mtcars[,i,])) {
+mean_value = mean(mtcars[,i,])
+print(mean_value)
+}
+for (i in 1:length(mtcars) {
+mtcars("mpg")
+mtcars["mpg"]
+mtcars$mpg
+for (i in mtcars {
+for (i in mtcars[,,] {
+var_vec <- "mpg","cyl","disp","hp","drat"
+for (i in 1:length(var_vec) {
+for (i in 1:length(var_vec) {
+for (i in 1:length(var_vec){
+for (i in 1:length(var_vec)){
+print(i)
+}
+var_vec <- "mpg","cyl","disp","hp","drat"
+for (i in 1:length(var_vec)){
+print(i)
+}
+for (i in 1:length("var_vec")){
+print(i)
+}
+length(var_vec)
+length("var_vec")
+var_vec <- c("mpg","cyl","disp","hp","drat")
+var_vec
+for (i in 1:length("var_vec")){
+print(i)
+}
+length(var_vec)
+for (i in 1:length(var_vec)){
+print(i)
+}
+for (i in 1:length(var_vec)){
+print(i)
+mean_value <-mean(mtcars$i)
+}
+mtcars("mpg")
+mtcars["mpg"]
+for (i in 1:length(var_vec)){
+print(i)
+mean_value <-mean(mtcars(i))
+}
+for (i in 1:length(var_vec)){
+print(i)
+mean_value <-mean(mtcars[i])
+}
+mean(mtcars["mpg"])
+mytcars["mpg"]
+mtcars["mpg"]
+as.numeric(mtcars["mpg"])
+mtcars$mpg
+mean(mtcars$mpg)
+for (i in 1:length(var_vec)){
+print(i)
+mean_value = mean(mtcars$var_vec[i])
+}
+var_vec[i]
+var_vec[1]
+var_vec[2]
+var_vec[3]
+var_vec[4]
+mean(mtcars$var_vec)
+mean(mtcars$var_vec[1])
+mean(mtcars$var_vec[2])
+mtcars$var_vec[1]
+mtcars$(var_vec[1])
+mtcars[,i,]
+mtcars[,2,]
+mtcars[,3,]
+for (i in mtcars[,i,]){
+print(i)
+}
+data.class(mtcars)
+for (i in mtcars[i,,]){
+print(i)
+}
+for (i in mtcars){
+print(i)
+}
+mtcars
+for (i in mtcars){
+mean_vec <<- mean(mtcars[,i,])
+}
+for (i in mtcars){
+mean_vec <<- mean(mtcars[,,])
+}
+warnings()
+mean(mtcars["mpg"])
+mean(mtcars["mpg])
+mtcars["mpg"]
+for (i in mtcars){
+print(mtcars[,i,])
+}
+for (i in mtcars){
+print(mtcars[,i])
+}
+for (i in mtcars){
+print(mtcars[,i,])
+}
+for (i in mtcars){
+print(mtcars[i,,])
+}
+mtcars[1,]
+mtcars[1,,]
+mean(mtcars)
+library(purrr)
+means <- map_dbl(mtcars, mean)
+mean
+means
+?map_dbl
+sapply(mtcars, mean, na.rm = T)
+lapply(numdata, mean, na.rm = T)
+lapply(mtcars, mean, na.rm = T)
+for (i in mtcars){
+print(mtcars[,i])
+}
+for (i in mtcars){
+print(mtcars[,i,])
+}
+for (i in mtcars[,i]){
+mean_vec <- mean(i)
+}
+for (i in mtcars[,,){
+myMeans <- vector("numeric", length = 100)
+for(i in 1:100){
+x <- runif(10) # generate 10 random numbers from a uniform distribution
+myMeans[i] <- mean(x, na.rm = TRUE)
+}
+print(myMeans) # see the results!
+myMeans <- c()
+length(mtcars)
+myMeans <- c()
+for(i in 1:length(mtcars)){
+myMeans[i] <- mean(x, na.rm = TRUE)
+}
+print(myMeans) # see the results!
+for(i in 1:length(mtcars)){
+myMeans[i] <- mean(mtcars, na.rm = TRUE)
+}
+print(myMeans) # see the results!
+for (i in mtcars[,,]{
+for (i in mtcars[,,i]{
+for (i in mtcars{
+for (i in mtcars){
+print(i)
+}
+for (i in mtcars){
+print(mean(mtcars(i)))
+}
+mean(mtcars)
+mean(mtcars[i,,])
+mean(mtcars[1,,])
+mean(mtcars[1,])
+mean(mtcars[2,])
+mean(mtcars[2,,])
+mean(mtcars[,1,])
+for (i in 1:11){
+mean(mtcars[,1,])
+mean(mtcars[,2,])
+mean_vec <- 1:11
+mean_vec <- 1:11
+for (i in 1:lenght(mean_vec)){
+}
+for (i in 1:11){
+}
+}
+for (i in 1:11){
+for (i in 1:11) {
+print(mean(mtcars[,i,]))
+}
+#### USE PURR
+means <- map_dbl(mtcars,mean)
+means
+for (i in 1:11) {
+print(mean(mtcars[,i]))
+}
+for (i in 1:11) {
+mean_value <- (mean(mtcars[,i]))
+mean_vec <- mean_vec,mean_value
+print(mean_vec)
+}
+mean_vec <- c()
+for (i in 1:11) {
+mean_value <- (mean(mtcars[,i]))
+mean_vec <- mean_vec,mean_value
+print(mean_vec)
+}
+for (i in 1:11) {
+mean_value <- (mean(mtcars[,i,]))
+mean_vec <- mean_vec,mean_value
+print(mean_vec)
+}
+mean_vec
+mean_vec <- c()
+mean_vec
+mean_vec <- 1:11
+mean_vec
+mean_vec <- c()
+mean_vec
+for (i in 1:11) {
+mean_value <- (mean(mtcars[,i,]))
+#print(mean_value)
+mean_vec <- c(mean_vec,mean_value)
+print(mean_vec)
+}
+for (i in 1:11) {
+mean_value <- (mean(mtcars[,i]))
+mean_vec <- c(mean_vec,mean_value)
+print(mean_vec)
+}
+mean_vec <- c()
+for (i in 1:11) {
+mean_value <- (mean(mtcars[,i]))
+mean_vec <- c(mean_vec,mean_value)
+print(mean_vec)
+}
+for (i in 1:11) {
+mean_value <- (mean(mtcars[,i]))
+mean_vec <- c(mean_vec,mean_value)
+mean_vec
+}
+names(mtcars)
+names(mtcars[1])
+for (i in 1:11) {
+mean_vec <- c(mean_vec,mean_value)
+for (i in 1:11) {
+for (i in 1:11) {
+mean_vec <- c(mean_vec,mean_value)
+print(paste("Mean for",names(mtcars[1]),mean_value)
+}
+#### USE PURR
+means <- map_dbl(mtcars,mean)
+# Returns a vector
+sapply(mtcars, mean, na.rm = T)
+# Returns a list
+lapply(mtcars, mean, na.rm = T)
+myMeans <- c()
+for(i in 1:length(mtcars)){
+myMeans[i] <- mean(mtcars, na.rm = TRUE)
+}
+print(myMeans) # see the results!
+for (i in 1:11) {
+for (i in 1:11) {
+mean_value <- (mean(mtcars[,i]))
+mean_vec <- c(mean_vec,mean_value)
+print(paste("Mean for",names(mtcars[i]),mean_value)
+}
+for (i in 1:11) {
+mean_value <- (mean(mtcars[,i]))
+mean_vec <- c(mean_vec,mean_value)
+print(paste("Mean for",names(mtcars[i]),mean_value))
+}
+for (i in 1:11) {
+# mean_value <- (mean(mtcars[,i]))
+# mean_vec <- c(mean_vec,mean_value)
+mean_vec[i] <- mean(mtcars[,i])
+print(paste("Mean for",names(mtcars[i]),mean_value))
+}
+mtcars
+mean_vec
+mean_vec <- c()
+for (i in 1:11) {
+# mean_value <- (mean(mtcars[,i]))
+# mean_vec <- c(mean_vec,mean_value)
+mean_vec[i] <- mean(mtcars[,i])
+print(mean_vec)
+print(paste("Mean for",names(mtcars[i]),mean_value))
+}
+for (i in 1:11) {
+# mean_value <- (mean(mtcars[,i]))
+# mean_vec <- c(mean_vec,mean_value)
+mean_vec[i] <- mean(mtcars[,i])
+#print(mean_vec)
+print(paste("Mean for",names(mtcars[i]),mean_value))
+}
+mean_vec <- c()
+for (i in 1:11) {
+mean_value <- (mean(mtcars[,i]))
+mean_vec <- c(mean_vec,mean_value)
+#print(mean_vec)
+print(paste("Mean for",names(mtcars[i]),mean_value))
+}
+mean_vec
+mtcars
+############## More for loop examples ########################
+subset(mtcars,mpg.21)
+############## More for loop examples ########################
+subset(mtcars,mpg)
+############## More for loop examples ########################
+subset(mtcars,mpg == 21)
+########initiate an empty vector
+mean_vec <- c()
+mwean_
+mean_vec
+mtcars[1,]
+mtcars[,1]
+mtcars[,2]
+mtcars[,3]
+########initiate an empty vector
+mean_vec <- c()
+#### There are 11 variables so we want i to be a number starting with 1 and ending with 11
+for (i in 1:11) {
+#save the mean for each iteration in a variable mean_vec
+mean_value <- (mean(mtcars[,i]))
+# Add values to the empty mean vector by concatonating mean_value each iteration
+mean_vec <- c(mean_vec,mean_value)
+print(mean_vec)
+print(paste("Mean for",names(mtcars[i]),mean_value))
+}
+#### There are 11 variables so we want i to be a number starting with 1 and ending with 11
+for (i in 1:11) {
+#save the mean for each iteration in a variable mean_vec
+mean_value <- (mean(mtcars[,i]))
+# Add values to the empty mean vector by concatonating mean_value each iteration
+mean_vec <- c(mean_vec,mean_value)
+print(mean_vec)
+print("Mean for",names(mtcars[i]),mean_value)
+}
+ncol()
+#### USE PURR
+means <- map_dbl(mtcars,mean)
+means
+# Returns a vector
+sapply(mtcars, mean, na.rm = T)
+# Returns a list
+lapply(mtcars, mean, na.rm = T)
+data.class(means)
+# Returns a vector
+sapply(mtcars, mean, na.rm = T)
+?sappl
+?sapply
+pizza
+pizza <- 1:11
+pizza
+?sapply
+# empty matrix that we will use to
+hetero_mat <- matrix(exp_hvec,nrow = 11, ncol = length(loci_vec))

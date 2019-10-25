@@ -1,0 +1,5 @@
+pops.for.sims <- readRDS("273_populations_sims.csv")
+pops.for.sims <- readRDS("273_populations_sims.csv")
+getwd()
+setwd("~/Documents/GitHub/LTA-Project/Commits from Desktop/Research/Current_LTA_code")
+pops.for.sims <- readRDS("pop.for.sims.csv")
