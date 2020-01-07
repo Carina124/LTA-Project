@@ -360,7 +360,7 @@ LR_calculator <- function(file.name, num_contribs, num_sims, is.a.truecontrib){
 
 #TEST AREA 
 #file.name,num_contribs,num_sims,is.a.truecontrib)  
-LRs <- LR_calculator("Cree.243_new.csv", 3, 101, 1)
+LRs <- LR_calculator("Cree.243_new.csv", 4, 101,1)
 
 
 #######################################################
@@ -431,29 +431,24 @@ non.contrib.fpr.array
 
 ########################################## STEP:2 Loop that counts FPR greater than -1 for the entire 3d array #######################################################################
 ## This loop counts the number of FPRs found in each population per contributor and stores it in the matrix FPRcount
+pops.for.sims = pops.for.sims[1:85]
 
-###change this to for sims 
-pops.for.sim = y - 1
-#this needs to be placed back in 
-#fprcount_mat = matrix(1:88,nrow = length(pops.for.sim),ncol = 8)
+num_contribs = 8
+fprcount_mat = matrix(1:(length(pops.for.sims)*num_contribs),nrow = length(pops.for.sims),ncol = num_contribs)
 
-fprcount_mat = matrix(1:456,nrow = 57,ncol = 8)
-
-for (i in 1:pops.for.sim){
+for (i in 1:length(pops.for.sims)){
   # i makes the connection from population 
-  population = pops.for.sims[i]
+  #population = pops.for.sims[i]
   
 
   for(j in 1:8){
-    contrib = j
-    count=1
-    #sticks is num_sims 
-    #sticks = array_3d[,j,i]
-    for(k in 1:1000){
+    
+    count=0
+    for(k in 1:100){
       sticks = non.contrib.fpr.array[k,j,i]
       
       
-      if(sticks > 0){
+      if(sticks > 1){
         
         count = count + 1
         print(count)
@@ -463,7 +458,7 @@ for (i in 1:pops.for.sim){
     }
     
     
-    result = (count - 1)
+    result = (count)
    # print(result)
     fprcount_mat[i,j] = result
     
@@ -485,7 +480,7 @@ write.csv(total.fpr.true.contrib.mat, "truecontrib_mat2.csv")
 
 iterations = 1:8
 colnames(total.fpr.non.contrib.mat) <- iterations
-rownames(total.fpr.non.contrib.mat) <- pops.for.sims[1:57]
+rownames(total.fpr.non.contrib.mat) <- pops.for.sims
 total.fpr.non.contrib.mat
 
 write.csv(non_fpr_mat, "noncontrib_mat2.csv")
@@ -501,7 +496,7 @@ colorvec = c( "blue","red","green","purple","violet","yellow","pink","black")
 plot.new()
 
 #This intiates the plot 
-plot(x=c(),y=c(),xlim = c(1,8),ylim = c(0,1000),main =" False Positives  (1000 iterations)",ylab = "false postive", xlab = 
+plot(x=c(),y=c(),xlim = c(1,8),ylim = c(0,100),main =" False Positives  (1000 iterations)",ylab = "false postive", xlab = 
        "number of contributors")
 
 
@@ -521,24 +516,25 @@ legend("center", legend=c("AA","Apache","Bahamian","White","Chamorro","Filipino"
 #STEP 2: This is done after LRs have been calculated for all populations and have been put into a 3darray.
 #this is an empty matrix that looks through the 3d array and counts the instances where the LR is greater than -1
 # the loop then divides the # of LR by the amount of iterations and it is stored in a Matrix that will be used for plotting 
+pops.for.sims <- readRDS("pop.for.sims.csv")
 
 #fpr.average.mat = matrix(1:88,nrow = length(pops.for.sims),ncol = 8)
-fpr.average.mat = matrix(1:456,nrow = 57,ncol = 8)
+fpr.average.mat = matrix(1:(length(pops.for.sims)*8),nrow = length(pops.for.sims),ncol = 8)
 
-for (i in 1:57){
-  population = pops.for.sims[i]
+for (i in 1:length(pops.for.sims)){
+  #population = pops.for.sims[i]
   
   for(j in 1:8){
     contrib = j
     count=1
     #sticks is iterations 
     #sticks = array_3d[,j,i]
-    for(k in 1:1000){
+    for(k in 1:100){
       #this needs to be changed depending on which array is being used 
       sticks = non.contrib.fpr.array[k,j,i]
       
       
-      if(sticks > 0){
+      if(sticks > 1){
         
         count = count + 1
         print(count)
@@ -548,7 +544,7 @@ for (i in 1:57){
     }
     
     #this needs to be changed depending on how many iterations are used 
-    result = (count - 1)/1000
+    result = (count - 1)/100
     print(result)
     fpr.average.mat[i,j] = result
     
@@ -557,31 +553,80 @@ for (i in 1:57){
 
 true.contrib.ave.fpr_mat <-fpr.average.mat
 non.contrib.ave.fpr_mat <- fpr.average.mat
+
+
+non
+
 ################################# STEP:5  PLOT for AVerage FPR  counts of TRUE & NON CONTRIBUTORS#####################################################################
 #STEP 3 takes the non contrib and true contrib matrixes and puts them on one plot 
 
 
 #This is the vector used to make the different colored lines for all of the populations 
-colorvec = c( "blue","red","green","purple","violet","yellow","pink","black")
+colorvec = c("blue","red","green","purple","violet","yellow","pink","pink","chartreuse",
+             "coral","aquamarine4","darkgreen","darkmagenta",
+             "darkorange",
+             "dimgrey",
+             "firebrick",
+             "floralwhite",
+             "gray",
+             "gray0",
+             "lavenderblush",
+             "lightcoral",
+             "mistyrose2",
+             "navy",
+             "olivedrab1",
+             "tomato2",
+             "chocolate")
 
 
 
 #This intiates the plot 
-plot.new()
-plot(x=c(),y=c(),xlim = c(1,8),ylim = c(0,1),main =" False Positives  (1000 iterations)",ylab = "false postive", xlab = 
-       "number of contributors")
 
+
+plot.new()
+plot(x=c(),y=c(),xlim = c(1,7),ylim = c(0,.09))
 
 #this loop adds points onto the intiated plot with i reffering to the location in the matrix 
-for(i in 1:8){
-  points(non.contrib.ave.fpr_mat[i,], col= colorvec[i], lty=1)
- # points(true.contrib.ave.fpr_mat[i,], col=colorvec[i],lty=1)
+j = 0
+pops.for.legend = c()
+for(i in 1:273){
+  j = j + 1
+  #print(j)
+  points(fpr.average.mat[i,], col=j,pch=20,lty=1)
+  #for(k in 1:length(pops.for.sims)){
+      #pops.for.legend = pops.for.sims[k]
+      #l = 0
+      #legend("topleft", legend = c(pops.for.legend,pops.for.legend, col=(l +1 )))
+  }
+
+for(k in 1:length(pops.for.sims)){
+  pops.for.legend = pops.for.sims[k]
+  l = 0
+  legend("topleft", legend = c(pops.for.legend,pops.for.legend, col=(l +1 )))
 }
+  #legend_pops = pops.for.sims[i]
+  #legend("center", legend =c(legend_pops,legend_pops), col =j)
+ # points(true.contrib.ave.fpr_mat[i,], col=colorvec[i],lty=1)
+
 
 #creates a lengend the colors need to be checked to make sure there are no duplicate colors!
-legend("center", legend=c("AA","Apache","Bahamian","White","Chamorro","Filipino",
-                          "Jamaican","Navajo","SEH","SWH","Trinidadian"),
-       col=c( "blue","red","green","purple","violet","yellow","pink","black"), lty=1:2, cex=0.8)
+legend("center", legend=c("Na.African","Inuit","Mayan","Hatian","Khoe","Poland",
+                          "Objwe","Chinese","Nepalese","Af.American","US.Caucasian"),
+       col=c( "blue","red","black","purple","violet","yellow","pink","pink","chartreuse",
+             "coral","aquamarine4","darkgreen","darkmagenta",
+              "darkorange",
+              "dimgrey",
+              "firebrick",
+              "floralwhite",
+              "gray",
+              "gray0",
+              "lavenderblush",
+              "lightcoral",
+              "mistyrose2",
+              "navy",
+              "olivedrab1",
+              "tomato2",
+              "chocolate"), cex=.8, pch =20)
 
 
 ################### STEP 6: PLtos FPR greater than -1 vs Expected heterozygozity of the 7th contrib###################
