@@ -27,7 +27,8 @@ library(readr)
 # "." == a space between words
 # "
 
-
+############# USER ARGUMENT CODE WILL BEGIN HERE ################
+args = commandArgs(trailingOnly=TRUE) # MARIA 05/20/20 initiated requirement of args user input here
 
 ###########################
 #### START OF FUNCTION ####
@@ -365,6 +366,9 @@ LR_calculator <- function(file.name, num_contribs, num_sims, is.a.truecontrib)
 pops.for.sims <- readRDS("pop.for.sims.csv")
 
 file.exists("pop.for.sims.csv")
+
+# MARIA 05/20/20 Added line below to use user input argument for what populations to run analysis on
+pops.for.sims <- pops.for.sims[as.numerical(args[1]):as.numerical(args[2])] #args 2 can only go up to 273 since there are only 273 populations
 
 #used in the 3d array 
 contributer = 1:10
